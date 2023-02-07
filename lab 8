@@ -1,0 +1,99 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+void vvid(double *x, double *eps, int *ki);
+double fiter(double x, double eps, int ki,int *n);
+double ftoch(double x);
+void vyvid(int ki, double s, double f, int n);
+
+int main() {
+	double x, // x - значення x
+		eps, //мінімальне значення члену ряду
+		s, // s - значення обчислене сумою рядів
+		f; // f - значення обчислене за формулою
+	int ki,  // ki - максимальна кількість ітерацій
+		n; // n - значення n
+	char vidp; // відповідь користувача
+	system("chcp 1251 & cls");
+	do {
+		printf("Функція f = ((e^x - e^-x + 2 * sin x)/4\n");
+		printf("ряд E(n=0..+00)((x^4n+1)/(4n+1)!) при x є [-10,10]\n");
+		vvid(&x, &eps, &ki);
+		s = fiter(x, eps, ki,&n);
+		f = ftoch(x);
+		vyvid(ki, s, f,n);
+		printf("\nПродовжувати роботу (Y - так)? ");
+		while ((vidp = getchar()) == ' ' || vidp == '\n' || vidp == '\t');
+		fseek(stdin, 0, SEEK_END);
+	} while (vidp == 'Y' || vidp == 'y' || vidp == 'Т' || vidp == 'т');
+	printf("\n\n");
+	system("pause");
+	return 0;
+}
+void vvid(double *x, double *eps, int *ki) // параметри передаються за посиланнями,щоб змінити їх всередині функції
+{
+	int ind;// локальна змінна
+	ind = 1;
+	while (ind) {
+		printf(" введіть x ");
+		scanf_s("%lf", x);
+		fseek(stdin, 0, SEEK_END);
+		if (*x < -10 || *x > 10) printf("\tневірне значення x\n");
+		else ind = 0;
+	}
+	ind = 1;
+	while (ind) {
+		printf(" введіть eps ");
+		scanf_s("%lf", eps);
+		fseek(stdin, 0, SEEK_END);
+		if (*eps <= 0) printf("\tневірне значення eps(не може бути <=0)\n");
+		else ind = 0;
+	}
+	ind = 1;
+	while (ind) {
+		printf(" введіть k ");
+		scanf_s("%d", ki);
+		fseek(stdin, 0, SEEK_END);
+		if (*ki <= 0) printf("\tгранична кількість ітерацій має бути >0\n");
+		else ind = 0;
+	}
+}
+double fiter(double x, double eps, int ki, int *n)
+     // x, eps та ki передаються за значенням
+     // для використання в обчисленнях
+	 // int ki - максимальна допустима кількість ітерацій
+	 // n передається за посиланням
+	 // щоб підрахувати кількість ітерацій
+ {
+	double vr, ar, an, s;// vr, ar, an, s - локальні
+	an = x;
+	ar = x * x * x * x / 8; *n = 0; s = an;
+	do {
+		//обчислення наступного члену ряду за рекурентною ф-лою
+		(*n)++;
+		vr = (*n) * (*n);
+		an = an * ar / (32 * vr * vr - 16 * vr * (*n) - 2 * vr + (*n));// застосування мемоїзації
+		s = s + an;
+	} while (fabs(an) >= eps && *n < ki);
+	return s;
+}
+
+double ftoch(double x) {
+	double f;// f - локальна змінна , х передається за значенням
+	if (x == 0) f = 0;
+	else
+		f = (exp(x) - exp(-x) + 2 * sin(x)) / 4;
+	return f;
+}
+
+void vyvid(int ki, double s, double f,int n) {//ki,s,f,n - передаються за значенням
+	if (n == ki)
+		printf("досягнуто ліміту кількості ітерацій\n");
+	printf("результат:\n");
+	printf(" кількість ітерацій n = %d\n", n);
+	printf(" наближене значення функції s = %0.9f\n", s);
+	printf(" точне значення функції f = %0.9f\n", f);
+	printf(" похибка |f-s| = %0.9f\n", fabs(f - s));
+}

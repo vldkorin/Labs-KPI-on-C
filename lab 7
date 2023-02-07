@@ -1,0 +1,77 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+int main() {
+	double x,
+		eps,// похибка
+		an,// n-ий член суми
+		s,// сума
+		ar,// x * x * x * x
+		f,// значення 
+	    vr;//n*n
+	int k,// гранична кількість ітерацій
+		n,// кількість виконаних ітерацій
+		ind;// індикатор
+	char vidp;
+	system("chcp 1251 & cls");
+	printf("Функція f = ((e^x - e^-x + 2 * sin x)/4\n ");
+	printf("ряд E(n=0..+00)((x^4n+1)/(4n+1)!) при x є [-10,10]\n");
+	/* Введення вхідних даних */
+	do {
+		/* введення х */
+		ind = 1;
+		do {
+			printf(" введіть x ->");
+			scanf_s("%lf", &x);
+			fseek(stdin, 0, SEEK_END);// очистка буфера
+			if (x < -10 || x > 10) printf("\tневірне значення х(поза проміжком)\n");
+			else ind = 0;
+		} while (ind);
+		/* ввід епсилон */
+		ind = 1;
+		do {
+			printf(" введіть eps -> ");
+			scanf_s("%lf", &eps);
+			fseek(stdin, 0, SEEK_END);// очистка буфера
+			if (eps <= 0) printf("\tневірне значення eps(не може бути <=0\n");
+			else ind = 0;
+		} while (ind);
+		/* задання k */
+		ind = 1;
+		do {
+			printf(" введіть k -> ");
+			scanf_s("%d", &k);
+			fseek(stdin, 0, SEEK_END);// очистка буфера
+			if (k <= 0) printf("\tневірне значення k(не може бути <=0\n");
+			else ind = 0;
+		} while (ind);
+		/* обчислення значення функції */
+		f = (exp(x) - exp(-x) + 2 * sin(x)) / 4;
+		/* обчислення значення степеневого ряду */
+		ar = x * x * x * x / 8;
+		n = 0;
+		an = x;
+		s = an;
+		do {
+			n++;
+			vr = n * n;
+			an = an * ar / (32 * vr * vr - 16 * vr* n - 2 * vr + n);// винести vr
+			s = s + an;
+		} while (fabs(an) >= eps && n < k);
+		/* виведення результатів */
+		if (n == k)
+			printf("досягнуто ліміту кількості ітерацій\n");
+		printf("результат:\n");
+		printf(" кількість ітерацій n = %d\n", n);
+		printf(" наближене значення функції s = %0.9f\n", s);
+		f = (exp(x) - exp(-x) + 2 * sin(x)) / 4;
+		printf(" точне значення функції f = %0.9f\n", f);
+		printf(" похибка |f-s| = %0.9f\n", fabs(f - s));
+		fseek(stdin, 0, SEEK_END);// очистка буфера
+		printf("Продовжувати роботу (Y - так)? ");
+		while ((vidp = getchar()) == ' ' || vidp == '\n' || vidp == '\t'); // пропуск пробільних символів і одержання відповіді
+		fseek(stdin, 0, SEEK_END);// очищення буферу від зайвої інформації
+	} while (vidp == 'Y' || vidp == 'y' || vidp == 'Т' || vidp == 'т'); // працює з українськими буквами ,
+	// якщо є system("chcp 1251 & cls") і char vidp описано без unsigned
+	printf("\n\n"); return 0;
+}

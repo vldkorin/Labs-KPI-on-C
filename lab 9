@@ -1,0 +1,140 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+void vvid(double* x, double* eps, int* k);
+double fiter(double x, double eps, int k, int* n);
+double ftoch(double x);
+void vyvid(int k, double s, double f, int n);
+double fiter_f(double x, double eps, double an, double ar, int k, int* n);
+
+int main() {
+    double x, // x - значення x
+        eps, //мінімальне значення члену ряду
+        s, // s - значення обчислене сумою рядів
+        f; // f - значення обчислене за формулою
+    int k,  // ki - максимальна кількість ітерацій
+        n; // n - значення n
+    char vidp; // відповідь користувача
+    system("chcp 1251 & cls");
+    do {
+        printf("Функція f = ((e^x - e^-x + 2 * sin x)/4\n");
+        printf("ряд E(n=0..+00)((x^4n+1)/(4n+1)!) при x є [-10,10]\n");
+        vvid(&x, &eps, &k);
+        s = fiter(x, eps, k, &n);
+        f = ftoch(x);
+        vyvid(k, s, f, n);
+        printf("\nПродовжувати роботу (Y - так)? ");
+        while ((vidp = getchar()) == ' ' || vidp == '\n' || vidp == '\t');
+        fseek(stdin, 0, SEEK_END);
+    } while (vidp == 'Y' || vidp == 'y' || vidp == 'Т' || vidp == 'т');
+    printf("\n\n");
+    system("pause");
+    return 0;
+}
+
+void vvid_x(double* x) {
+    // x - параметр, який передається за посиланням
+    printf("Введiть значення х: ");
+    scanf_s("%lf", x);
+    fseek(stdin, 0, SEEK_END);
+    if (*x < -10 || *x>10) {
+        printf("\tневірне значення x\n");
+        vvid_x(x);
+    }
+}
+
+void vvid_eps(double* eps) {
+    // eps - параметр, який передається за посиланням
+    printf(" введіть eps ");
+    scanf_s("%lf", eps);
+    fseek(stdin, 0, SEEK_END);
+    if (*eps <= 0) {
+        printf("\tневірне значення eps(не може бути <=0)\n");
+        vvid_eps(eps);
+    }
+
+}
+
+void vvid_k(int* k) {
+    // k - параметр, який передається за посиланням
+    printf(" введіть k ");
+    scanf_s("%d", k);
+    fseek(stdin, 0, SEEK_END);
+    if (*k <= 0) {
+        printf("\tгранична кількість ітерацій має бути >0\n");
+        vvid_k(k);
+    }
+}
+
+double fiter(double x, double eps, int k, int* n) {
+    *n = 0;
+    return x + fiter_f(x, eps, x, x*x*x*x/8., k, n);
+}
+
+double fiter_f( double x, double eps, double an, double ar, int k, int *n)
+// x, eps, an, vr, ar та k передаються за значенням
+// для використання в обчисленнях
+// int k - максимальна допустима кількість ітерацій
+// n передається за посиланням
+// щоб підрахувати кількість ітерацій
+{
+  
+    double s;// накопичує результат обчислення
+    (*n)++;// обчислення наступного члену ряду за рекурентною ф-лою
+    double vr = (*n) * (*n);
+    an = an * ar / (32 * vr * vr - 16 * vr * (*n) - 2 * vr + (*n)); // застосування мемоїзації
+    if (fabs(an) >= eps && (*n) < k) // умова продовження рекурсії 
+        s = fiter_f(x, eps, an, ar, k, n); // рекурсивне звернення
+    else
+        s = 0;
+    return s + an; // повернення накопичуваної суми доданків  
+}
+
+double ftoch(double x) {
+    double f;// локальна
+    if (x == 0) f = 0;
+    else
+        f = (exp(x) - exp(-x) + 2 * sin(x)) / 4;
+    return f;
+}
+
+void vvid(double* x, double* eps, int* k) {
+    vvid_x(x);
+    vvid_eps(eps);
+    vvid_k(k);
+}
+
+void vyvid(int k, double s, double f, int n) {
+    if (n == k)
+        printf("досягнуто ліміту кількості ітерацій\n");
+    printf("результат:\n");
+    printf(" кількість ітерацій n = %d\n", n);
+    printf(" наближене значення функції s = %0.9f\n", s);
+    printf(" точне значення функції f = %0.9f\n", f);
+    printf(" похибка |f-s| = %0.9f\n", fabs(f - s));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

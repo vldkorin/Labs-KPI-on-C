@@ -1,0 +1,30 @@
+#include<stdio.h>/* підmикання бібліотеки stdio.h;*/
+#include <stdlib.h> /* підмикання stdlib.h;*/
+#include <math.h>/* підмикання бібліотеки math.h*/
+int main()
+{
+    /*введення констант*/
+    const int с = 4;
+    const int d = 2;
+    printf("(vlog(x+2))/(4x-a)+sin|x+4|\n 3/4*x^2-4/5x^3+e^ctg(x+2)\n 3/5*x^-0.2\n");/* функція бібліотеки
+    stdio.h для виведення y стандартний потік»*/
+
+    float а, x;  /*введення змінної*/
+    printf("Vvedit znachennya a:\n");
+    scanf_s("%f", &а);
+    printf("Vvedit znachennya x:\n");
+    scanf_s("%f", &x);
+    double y, z, t;
+    y = (sqrt(log(x + d)) / (с * x - а) + sin(fabs(x + с)));
+    z = 0.05 * pow(x, 2) * (15 - 16 * x) + exp(1 / tan(x + d));
+    t = (double)3 / (double)5 * pow(x, -0.2);
+    printf("y=%f z=%f t=%f\n", y, z, t);/*виведення результатів обчислень*/
+    double r;
+    r = y;
+    y = z;
+    z = t;
+    t = r;
+    printf("y=%f z=%f t=%f\n", y, z, t);/*виведення результатів обчислень*/
+    system("pause");/*затримка екрану*/
+    return 0;/*повертає код завершення функції main*/
+}

@@ -1,0 +1,22 @@
+
+Laboratorna robota №1. Osnovy roboty v seredovyshchi Visual Studio */
+
+#include <stdio.h> /* dyrectyva pidmykannia zagolovochnogo faila standartnoi biblioteky stdio.h */
+
+#include <stdlib.h> /* pidmykannya standartnoi biblioteky stdlib.h (takozh mozhna vkazaty biblioteku windows.h) */
+
+#define N 255 /* dyrektyva oznachennia makrosu -- viznachaie konstantu z imenem N i znachenniam 255 */
+int main(){                  //tilo programy
+	char st[N];  /* ogoloshennya ryadkovoi zminnoi st */
+	printf( "\n\n\n\t\t\tPryvit! Tse -- C\n\n" ); /* funktsiia biblioteky
+	stdio.h dlya vyvedennia u standartnyi potik; symvol keruvannia 
+	\n perevodyt' kursor na novyi riadok; symvol \t zadaie tabuliuvannia na 8 pozytsii */
+	printf( "Yak tebe zvaty?\n" );
+	gets(st); /* funktsiia biblioteky stdio.h dlia vvedennia riadka tekstu */
+	system( "color 0B" ); /* funktsiia biblioteky stdlib.h; parametr zminy kol'oru: 0 - kolir fonu (vid 0 do F), B - kolir shryftu */
+	printf( "Pryvit, %s!\a" , st);  /* format %s vkazuie, shcho vyvodyt’sia 
+	znachennia riadkovoi zminnoii st, symvol \a zadaie zvukovyi sygnal */
+	getchar(); /* funktsiia biblioteky stdio.h dlya vvedennia symvola chi zatrymky ekranu - chekaie natiskannia klavishi Enter */
+	system( "color DE" ); printf( "Bazhaiu uspikhiv!\n" ); getchar();
+	return 0;  /* povertaie kod zavershennya funktsii main */
+}

@@ -1,0 +1,165 @@
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+
+#define N 10  // максимальна кількість елементів масиву
+#define P 3  // початкова кількість елементів масиву
+
+struct subject {
+	char tistechka[30];      // назва тістечок
+	char vyrobnyk[30];       // виробник
+	char sort[30];           // сорт
+	int kilkist_v_upakovtsi; // кількість в упаковці
+	int tsina_upakovky;    // ціна за упаковку
+};
+
+void vvid_k(int* k);
+void vvid_mas(struct subject mas[N], int k, int* n);
+void vyvid_mas(struct subject mas[N], int k);
+void vvid_p(int* p);
+void sort_name(struct subject mas[N], int k);
+void sort_quantity(struct subject mas[N], int k);
+
+int main() {
+	// k - кількість елементів в масиві
+	// p - за яким полем сортувати
+	// n - кількість елементів в масиві
+	int k, p, n;
+	n = 3;
+	char vidp; // відповідь користувача
+	system("chcp 1251 & cls");
+
+	struct subject mas[N] = { // масив структур
+	{"Назва 3", "Виробник 3", "Сорт 3", 8,   240},
+	{"Назва 1", "Виробник 1", "Сорт 1", 9,   225},
+	{"Назва 2", "Виробник 2", "Сорт 2", 4,   190},
+	};
+
+	do {
+		vvid_k(&k);
+		vvid_mas(mas, k, &n);
+		vyvid_mas(mas, k);
+		vvid_p(&p);
+		if (p)
+			sort_name(mas, k);
+		else
+			sort_quantity(mas, k);
+		vyvid_mas(mas, k);
+
+		printf("\n\nПродовжувати роботу (Y - так)? ");
+		while ((vidp = getchar()) == ' ' || vidp == '\n' || vidp == '\t');
+		fseek(stdin, 0, SEEK_END);
+	} while (vidp == 'Y' || vidp == 'y' || vidp == 'Т' || vidp == 'т');
+	printf("\n\n");
+	system("pause");
+	return 0;
+}
+
+void vvid_k(int* k) {
+	do {
+		printf("Введіть кількість елементів масиву: ");
+		scanf_s("%d", k);
+		while (getchar() != '\n');
+	} while (*k >= N || *k <= 0);
+}
+
+void vvid_mas(struct subject mas[N], int k, int* n)
+// ввід решти елементів масиву
+// mas - масив структур
+// k - потрібна кількість елементів масиву
+// n - кількість елементів в масиві
+{
+	for (; *n < k; (*n)++) {
+		printf(
+			"Введіть тістечко №%d\n"
+			"Назва: ",
+			*n + 1
+		);
+		scanf_s("%s", mas[*n].tistechka);
+		while (getchar() != '\n');
+
+		printf("Виробник: ");
+		scanf_s("%s", mas[*n].vyrobnyk);
+		while (getchar() != '\n');
+
+		printf("Сорт: ");
+		scanf_s("%s", mas[*n].sort);
+		while (getchar() != '\n');
+
+		printf("Кількість в упаковці: ");
+		scanf_s("%d", &mas[*n].kilkist_v_upakovtsi);
+		while (getchar() != '\n');
+
+		printf("Ціна за упаковку: ");
+		scanf_s("%d", &mas[*n].tsina_upakovky);
+		while (getchar() != '\n');
+	}
+}
+
+void vyvid_mas(struct subject mas[N], int k)
+// вивід масиву
+// mas - масив структур
+// k - кількість елементів масиву
+{
+	for (int i = 0; i < k; i++) {
+		printf(
+			" %s | %s | %s | %d | %d\n",
+			mas[i].tistechka, mas[i].vyrobnyk,
+			mas[i].sort, mas[i].kilkist_v_upakovtsi,
+			mas[i].tsina_upakovky
+		);
+	}
+}
+
+void vvid_p(int* p) {
+	do {
+		printf(
+			"Оберіть за яким полем сортувати:\n"
+			"0 - кількість в упаковці\n"
+			"1 - назва\n"
+			"=> "
+		);
+		scanf_s("%d", p);
+		while (getchar() != '\n');
+	} while (*p != 0 && *p != 1);
+}
+
+// метод сортуванння простими вставками для впорядкування елементів
+// масиву за зростанням , розміщуючи вихідну множину на початку масиву
+// mas - масив структур
+// k - кількість елементів масиву
+void sort_quantity(struct subject mas[N], int k) {
+	int i;
+	int j;
+	struct subject x;
+	for (i = 1; i < k; i++) {
+		x = mas[i];
+		j = i - 1;
+		while (j >= 0 && mas[j].kilkist_v_upakovtsi > x.kilkist_v_upakovtsi) {
+			mas[j + 1] = mas[j];
+			j--;
+		}
+		mas[j + 1] = x;
+	}
+}
+
+// метод сортуванння простими вставками для впорядкування елементів
+// масиву за зростанням , розміщуючи вихідну множину на початку масиву
+// mas - масив структур
+// k - кількість елементів масиву
+void sort_name(struct subject mas[N], int k) {
+	int i;
+	int j;
+	struct subject x;
+	for (i = 1; i < k; i++) {
+		x = mas[i];
+		j = i - 1;
+		while (j >= 0 && strcmp(mas[j].tistechka, x.tistechka) > 0) {
+			mas[j + 1] = mas[j];
+			j--;
+		}
+		mas[j + 1] = x;
+	}
+}
